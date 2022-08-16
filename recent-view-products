@@ -1,0 +1,117 @@
+{{ '//code.jquery.com/jquery-3.3.1.js' | script_tag }}
+{{ '//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js' | script_tag }}
+{{ 'jquery.products.min.js' | asset_url | script_tag }}
+
+<div class="recently-view-section page-width center custom-odd" style="display:none">
+<h2>Recently Viewed Products</h2>
+  <ul id="product-grid" data-id="{{ section.id }}" style="display:none" class="grid product-grid grid--2-col-tablet-down grid--4-col-desktop clearfix">
+  </ul>
+</div>
+
+<div class="index-recently-viewed-custom">
+
+<div class="index-section index-section--small custom-odd" style="display:none">
+  <div class="page-width">
+    <header class="section-header">
+      <h3 class="section-header__title">{{section.settings.heding}}</h3>
+    </header>
+  </div>
+  <div class="page-width page-width--flush-small">
+    <div class="grid-overflow-wrapper">
+      <div id="product-grid" class="grid grid--uniform aos-init" data-aos="overflow__animation" style="display:none" >
+        <div class="grid__item grid-product medium-up--one-half" data-aos="row-of-5">
+          <div class="grid-product__content fvcfxf">
+            <a href="{{product_1.url}}" class="grid-product__link">
+              <div class="grid-product__image-mask">
+                {%- assign preview_image = product_1.featured_media.preview_image -%}
+                {%- assign img_url = preview_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                <div class="image-wrap" style="height: 0; padding-bottom: {{ 100 | divided_by: preview_image.aspect_ratio }}%;">
+                  <img class="grid-product__image lazyload"
+                       data-src="{{ img_url }}"
+                       data-widths="[180, 360, 540, 720, 900, 1080]"
+                       data-aspectratio="{{ preview_image.aspect_ratio }}"
+                       data-sizes="auto"
+                       alt="{{ preview_image.alt | escape }}">
+                  <noscript>
+                    <img class="grid-product__image lazyloaded"
+                         src="{{ preview_image | img_url: '400x' }}"
+                         alt="{{ preview_image.alt | escape }}">
+                  </noscript>
+                </div>
+                
+              </div>
+
+            </a>
+            <div class="grid-product__meta">
+             <a href="{{product_1.url}}" class="grid-product__link">
+              <div class="grid-product__title grid-product__title--body">{{product_1.title}}</div>
+             </a>
+            <div class="grid-product__price">
+              {{product_1.price | money}}
+            </div>
+               {%if  product_1.description != blank%}
+              {%assign product1_des_html = product_1.description | strip_html%}
+              {%assign product1_des = product1_des_html | truncate: 100 %}
+              <div class="rte">
+                {{product1_des }}
+              </div>
+              {%endif%}
+            <div class="grid-product__shopbtn"><a href="{{product_1.url}}" class="btn">Shop Now</a>
+            </div>
+            </div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+Shopify.Products.showRecentlyViewed( { howManyToShow:2 } );
+</script>
+
+<style>
+  #shopify-section-{{section.id}}{
+    background: {{section.settings.bg_color}};
+  }
+
+</style>
+
+{% schema %}
+  {
+    "name": "Recently viewed products",
+    "class":"recently-viewed-product-section",
+    "settings": [
+     {
+        "type": "text",
+        "id": "heding",
+        "label": "Heading"
+     },
+     {
+        "type": "product",
+        "id": "product_1",
+        "label": "Recently Viewed Products 1"
+     },
+     {
+        "type": "product",
+        "id": "product_2",
+        "label": "Recently Viewed Products 2"
+     },
+     {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background Color"
+     }
+   ],
+    "presets": [{
+      "name": "Recently viewed products New",
+      "category": "Product",
+      "blocks": [
+      ]
+      }
+    ]
+  }
+{% endschema %}
